@@ -9,19 +9,18 @@
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
 
         body { 
-            /* Fondo gris carbón en lugar de negro puro para no cansar la vista */
             background: #18181b; 
             color: #e4e4e7; 
-            font-family: system-ui, -apple-system, sans-serif; /* Fuente limpia para los números */
+            font-family: system-ui, -apple-system, sans-serif; 
             text-align: center; 
             margin: 0; 
             padding: 20px; 
         }
         
         h2 {
-            font-family: 'Cinzel', serif; /* Fuente gótica solo para títulos */
+            font-family: 'Cinzel', serif; 
             font-size: 1.8rem;
-            color: #ff6b6b; /* Rojo más brillante y legible */
+            color: #ff6b6b; 
             font-weight: 700;
             margin-bottom: 10px;
         }
@@ -36,7 +35,7 @@
         .calendar-container { 
             max-width: 400px; 
             margin: 0 auto; 
-            background: #27272a; /* Fondo contenedor un poco más claro que el body */
+            background: #27272a; 
             border: 1px solid #3f3f46; 
             border-radius: 12px; 
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4); 
@@ -123,6 +122,13 @@
             border: 1px solid #553399; 
         }
 
+        /* Destacado para el día actual */
+        .today {
+            border: 2px solid #fbbf24 !important; /* Brillo dorado/ámbar */
+            box-shadow: 0 0 12px rgba(251, 191, 36, 0.6);
+            font-weight: bold;
+        }
+
         .empty { 
             background: transparent; 
         }
@@ -174,8 +180,9 @@
         const grid = document.getElementById('calendar-grid');
         const monthYear = document.getElementById('month-year');
         
-        // Inicia en la fecha actual del usuario
-        let currentDate = new Date(); 
+        // Fecha actual real para calcular el día de hoy y el mes inicial
+        const today = new Date();
+        let currentDate = new Date(today.getFullYear(), today.getMonth(), 1); 
 
         // Fecha Ancla INAMOVIBLE para cálculos: 17 de Julio de 2026 (Descanso)
         const anchorDateUTC = Date.UTC(2026, 6, 17);
@@ -207,11 +214,20 @@
                 const dayDiv = document.createElement('div');
                 dayDiv.textContent = day;
 
+                // Definir si es descanso o trabajo
+                let className = 'day';
                 if (Math.abs(diffDays) % 2 === 0) {
-                    dayDiv.className = 'day rest';
+                    className += ' rest';
                 } else {
-                    dayDiv.className = 'day work';
+                    className += ' work';
                 }
+
+                // Si coincide con el día, mes y año actual de la PC/celular, se marca como 'today'
+                if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                    className += ' today';
+                }
+
+                dayDiv.className = className;
                 grid.appendChild(dayDiv);
             }
         }
